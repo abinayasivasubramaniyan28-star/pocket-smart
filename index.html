@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PocketSmart AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 35px;
+        }
+
+        header p {
+            font-size: 17px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #17365d;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background: #17365d;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #28588d;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .box {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            background: #eef4fa;
+        }
+
+        .box h3 {
+            margin-bottom: 10px;
+        }
+
+        .amount {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            background: #f8f9fa;
+            border-left: 5px solid #17365d;
+            padding: 20px;
+            margin-top: 15px;
+            line-height: 1.7;
+        }
+
+        .good {
+            border-left-color: green;
+        }
+
+        .warning {
+            border-left-color: orange;
+        }
+
+        .danger {
+            border-left-color: red;
+        }
+
+        footer {
+            background: #17365d;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        @media(max-width: 700px) {
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <h1>💰 PocketSmart AI</h1>
+
+    <p>
+        Your Smart Budget & Recommendations Assistant
+    </p>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <!-- INPUT -->
+
+    <div class="card">
+
+        <h2>📊 Enter Your Monthly Budget</h2>
+
+        <label>
+            Monthly Income
+        </label>
+
+        <input
+            type="number"
+            id="income"
+            placeholder="Example: 30000"
+        >
+
+
+        <label>
+            Food Expenses
+        </label>
+
+        <input
+            type="number"
+            id="food"
+            placeholder="Example: 5000"
+        >
+
+
+        <label>
+            Transport Expenses
+        </label>
+
+        <input
+            type="number"
+            id="transport"
+            placeholder="Example: 3000"
+        >
+
+
+        <label>
+            Shopping Expenses
+        </label>
+
+        <input
+            type="number"
+            id="shopping"
+            placeholder="Example: 4000"
+        >
+
+
+        <label>
+            Entertainment Expenses
+        </label>
+
+        <input
+            type="number"
+            id="entertainment"
+            placeholder="Example: 2000"
+        >
+
+
+        <label>
+            Other Expenses
+        </label>
+
+        <input
+            type="number"
+            id="other"
+            placeholder="Example: 2000"
+        >
+
+
+        <label>
+            Savings Goal
+        </label>
+
+        <input
+            type="number"
+            id="goal"
+            placeholder="Example: 5000"
+        >
+
+
+        <button onclick="analyzeBudget()">
+
+            🤖 Analyze My Budget
+
+        </button>
+
+    </div>
+
+
+
+    <!-- DASHBOARD -->
+
+    <div class="card">
+
+        <h2>💳 Budget Dashboard</h2>
+
+        <div class="dashboard">
+
+            <div class="box">
+
+                <h3>Income</h3>
+
+                <div
+                    class="amount"
+                    id="incomeResult">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+            <div class="box">
+
+                <h3>Total Expenses</h3>
+
+                <div
+                    class="amount"
+                    id="expenseResult">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+            <div class="box">
+
+                <h3>Remaining</h3>
+
+                <div
+                    class="amount"
+                    id="balanceResult">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- AI RECOMMENDATION -->
+
+    <div class="card">
+
+        <h2>🤖 PocketSmart AI Recommendations</h2>
+
+        <div
+            id="recommendations"
+            class="recommendation">
+
+            Enter your income and expenses
+            to receive smart recommendations.
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SAVINGS -->
+
+    <div class="card">
+
+        <h2>🎯 Savings Analysis</h2>
+
+        <div
+            id="savingResult"
+            class="recommendation">
+
+            Your savings analysis will appear here.
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<footer>
+
+    <p>
+        © 2026 PocketSmart AI
+    </p>
+
+    <p>
+        Smart budgeting for better financial decisions.
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+function getValue(id) {
+
+    let value =
+        parseFloat(
+            document.getElementById(id).value
+        );
+
+    return isNaN(value) ? 0 : value;
+
+}
+
+
+
+function analyzeBudget() {
+
+
+    // Get values
+
+    let income =
+        getValue("income");
+
+    let food =
+        getValue("food");
+
+    let transport =
+        getValue("transport");
+
+    let shopping =
+        getValue("shopping");
+
+    let entertainment =
+        getValue("entertainment");
+
+    let other =
+        getValue("other");
+
+    let goal =
+        getValue("goal");
+
+
+    // Calculate expenses
+
+    let totalExpenses =
+        food +
+        transport +
+        shopping +
+        entertainment +
+        other;
+
+
+    let balance =
+        income - totalExpenses;
+
+
+    // Display dashboard
+
+    document.getElementById(
+        "incomeResult"
+    ).innerText =
+        "₹" + income.toFixed(2);
+
+
+    document.getElementById(
+        "expenseResult"
+    ).innerText =
+        "₹" + totalExpenses.toFixed(2);
+
+
+    document.getElementById(
+        "balanceResult"
+    ).innerText =
+        "₹" + balance.toFixed(2);
+
+
+
+    // Expense percentage
+
+    let expensePercentage = 0;
+
+    if (income > 0) {
+
+        expensePercentage =
+            (totalExpenses / income) * 100;
+
+    }
+
+
+
+    // Recommendations
+
+    let recommendation = "";
+
+
+
+    if (income <= 0) {
+
+        recommendation =
+            "⚠️ Please enter a valid monthly income.";
+
+    }
+
+    else if (balance < 0) {
+
+        recommendation =
+            "🔴 Your expenses are higher than your income."
+            + "<br><br>"
+            + "• Reduce shopping and entertainment expenses."
+            + "<br>"
+            + "• Review unnecessary subscriptions."
+            + "<br>"
+            + "• Create a fixed monthly spending limit."
+            + "<br>"
+            + "• Try to avoid unnecessary debt.";
+
+    }
+
+    else if (expensePercentage > 80) {
+
+        recommendation =
+            "🟠 Your expenses are using more than 80% "
+            + "of your income."
+            + "<br><br>"
+            + "• Try to reduce non-essential expenses."
+            + "<br>"
+            + "• Set aside savings immediately after receiving income."
+            + "<br>"
+            + "• Track daily spending.";
+
+    }
+
+    else if (expensePercentage > 60) {
+
+        recommendation =
+            "🟡 Your budget is moderately high."
+            + "<br><br>"
+            + "• Review your shopping expenses."
+            + "<br>"
+            + "• Compare prices before purchasing."
+            + "<br>"
+            + "• Set a weekly spending limit.";
+
+    }
+
+    else {
+
+        recommendation =
+            "🟢 Your current spending is within a "
+            + "relatively lower share of your income."
+            + "<br><br>"
+            + "• Continue tracking expenses."
+            + "<br>"
+            + "• Build an emergency savings fund."
+            + "<br>"
+            + "• Consider setting a regular savings target.";
+
+    }
+
+
+
+    // Shopping recommendation
+
+    if (
+        shopping > income * 0.15 &&
+        income > 0
+    ) {
+
+        recommendation +=
+            "<br><br>🛍️ Shopping expenses are "
+            + "a significant part of your income."
+            + "<br>"
+            + "Consider setting a separate shopping budget.";
+
+    }
+
+
+
+    // Food recommendation
+
+    if (
+        food > income * 0.20 &&
+        income > 0
+    ) {
+
+        recommendation +=
+            "<br><br>🍔 Food expenses are relatively high."
+            + "<br>"
+            + "Meal planning and tracking food spending "
+            + "may help reduce unnecessary expenses.";
+
+    }
+
+
+
+    document.getElementById(
+        "recommendations"
+    ).innerHTML =
+        recommendation;
+
+
+
+    // Savings analysis
+
+    let savingMessage = "";
+
+
+    if (balance <= 0) {
+
+        savingMessage =
+            "You currently have no positive monthly balance."
+            + "<br><br>"
+            + "Focus on reducing expenses before increasing "
+            + "your savings target.";
+
+    }
+
+    else if (goal <= 0) {
+
+        savingMessage =
+            "Your estimated available balance is ₹"
+            + balance.toFixed(2)
+            + "."
+            + "<br><br>"
+            + "Set a savings goal to track your progress.";
+
+    }
+
+    else if (balance >= goal) {
+
+        savingMessage =
+            "🎉 Your available balance is ₹"
+            + balance.toFixed(2)
+            + "."
+            + "<br><br>"
+            + "Your monthly savings goal of ₹"
+            + goal.toFixed(2)
+            + " is within your current budget.";
+
+    }
+
+    else {
+
+        let difference =
+            goal - balance;
+
+        savingMessage =
+            "🎯 Your savings goal is ₹"
+            + goal.toFixed(2)
+            + "."
+            + "<br><br>"
+            + "You currently have ₹"
+            + balance.toFixed(2)
+            + " available."
+            + "<br><br>"
+            + "You need approximately ₹"
+            + difference.toFixed(2)
+            + " more to reach the goal.";
+
+    }
+
+
+    document.getElementById(
+        "savingResult"
+    ).innerHTML =
+        savingMessage;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
